@@ -1,0 +1,73 @@
+template: true
+valuesFilePath: ./values.yml
+
+resources:
+  - name: {{ .Values.myPipeline.resourcesPrefix }}git_resource
+    type: GitRepo
+    configuration:
+      gitProvider: {{ .Values.myRepo.gitProvider }}
+      path: {{ .Values.myRepo.path }}
+      branches:
+        include: {{ .Values.myRepo.branch }}
+
+  - name: {{ .Values.myPipeline.resourcesPrefix }}aql_01
+    type: Aql
+    configuration:
+      sourceArtifactory: {{ .Values.myArtifactory.integrationName }}
+      query: 'items.find({ "type":"file","stat.downloads":{"$eq":null}}).include("name","path","repo","size","stat.downloads").sort({"$desc":["size","name"]})'
+
+  # - name: {{ .Values.myPipeline.resourcesPrefix }}filespec_01
+  #   type: FileSpec
+  #   configuration:
+  #     sourceArtifactory: {{ .Values.myArtifactory.integrationName }}
+  #     aql: 'items.find({ "type":"file","stat.downloads":{"$eq":null}}).include("name","path","repo","size","stat.downloads").sort({"$desc":["size","name"]})'
+  #     recursive: false
+
+  # - name: {{ .Values.myPipeline.resourcesPrefix }}cron_trigger
+  #   type: CronTrigger
+  #   configuration:
+  #     interval: '*/5 * * * *'     # Every 5 minutes
+
+pipelines:
+  - name: {{ .Values.myPipeline.name }}
+    steps:
+      - name: pre_checks
+        type: Bash
+        configuration:
+          inputResources:
+            - name: {{ .Values.myPipeline.resourcesPrefix }}git_resource
+              trigger: false
+        execution:
+          onExecute:
+            - echo $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath
+            - env
+
+      - name: list_files_aql
+        type: Bash
+        configuration:
+          inputResources:
+            - name: {{ .Values.myPipeline.resourcesPrefix }}aql_01
+              trigger: false
+          integrations:
+            - name: {{ .Values.myArtifactory.integrationName }}
+          inputSteps:
+            - name: pre_checks
+        execution:
+          onExecute:
+            - env
+            - ls -la 
+
+      # - name: list_files_filespec
+      #   type: Bash
+      #   configuration:
+      #     inputResources:
+      #       - name: {{ .Values.myPipeline.resourcesPrefix }}filespec_01
+      #         trigger: false
+      #     integrations:
+      #       - name: {{ .Values.myArtifactory.integrationName }}
+      #     inputSteps:
+      #       - name: list_files_aql
+      #   execution:
+      #     onExecute:
+      #       - env
+      #       - ls -la 

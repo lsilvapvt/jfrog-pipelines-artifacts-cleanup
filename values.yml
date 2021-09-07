@@ -1,0 +1,11 @@
+myRepo:
+  gitProvider: acme_co_github
+  path: lsilvapvt/jfrog-pipelines-artifacts-cleanup
+  branch: main 
+
+myPipeline:
+  name: acme_artifactory_cleanup
+  resourcesPrefix: acme_cleanup_
+
+myArtifactory:
+  integrationName: acme_co_artifactory
