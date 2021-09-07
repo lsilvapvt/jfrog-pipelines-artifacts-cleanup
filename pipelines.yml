@@ -56,6 +56,7 @@ pipelines:
           onExecute:
             - env
             - ls -la 
+            - find .
 
       # - name: list_files_filespec
       #   type: Bash
