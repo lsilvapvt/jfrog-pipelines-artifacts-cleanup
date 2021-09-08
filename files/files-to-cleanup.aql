@@ -1,0 +1,13 @@
+items.find( 
+  {
+            "type":"file",
+            "created":{"$lt":"2020-09-01"},
+            "$or":
+                 [
+                     {"stat.downloads" : {"$eq":null}},
+                     {"stat.downloaded" : {"$lt":"2021-03-01"}}
+                 ]
+          }
+        }
+).include("size","repo","path","name","stat.downloads","stat.downloaded")
+.sort({"$desc":["size"]})

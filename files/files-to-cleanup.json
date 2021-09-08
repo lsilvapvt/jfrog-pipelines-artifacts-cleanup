@@ -1,0 +1,20 @@
+{
+    "files": [
+      {
+        "aql": {
+          "items.find": {
+            "type":"file",
+            "created":{"$lt":"${artifactsCutOffDate}"},
+            "$or":
+                 [
+                     {"stat.downloads" : {"$eq":null}},
+                     {"stat.downloaded" : {"$lt":"${downloadsCutOffDate}"}}
+                 ]
+          }
+        },
+        "sortBy": ["repo","name","size"],
+        "sortOrder": "desc"
+      }
+    ]
+}
+

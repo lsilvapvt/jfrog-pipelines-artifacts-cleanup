@@ -10,19 +10,6 @@ resources:
       branches:
         include: {{ .Values.myRepo.branch }}
 
-  - name: {{ .Values.myPipeline.resourcesPrefix }}aql_01
-    type: Aql
-    configuration:
-      sourceArtifactory: {{ .Values.myArtifactory.integrationName }}
-      query: 'items.find({ "type":"file","stat.downloads":{"$eq":null}}).include("name","path","repo","size","stat.downloads").sort({"$desc":["size","name"]})'
-
-  # - name: {{ .Values.myPipeline.resourcesPrefix }}filespec_01
-  #   type: FileSpec
-  #   configuration:
-  #     sourceArtifactory: {{ .Values.myArtifactory.integrationName }}
-  #     aql: 'items.find({ "type":"file","stat.downloads":{"$eq":null}}).include("name","path","repo","size","stat.downloads").sort({"$desc":["size","name"]})'
-  #     recursive: false
-
   # - name: {{ .Values.myPipeline.resourcesPrefix }}cron_trigger
   #   type: CronTrigger
   #   configuration:
@@ -37,12 +24,20 @@ pipelines:
           inputResources:
             - name: {{ .Values.myPipeline.resourcesPrefix }}git_resource
               trigger: false
+          integrations:
+            - name: {{ .Values.myArtifactory.integrationName }}
         execution:
           onExecute:
             - echo $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath
+            - artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
+            - downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
             - env
+            - replace_envs $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - cat $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - jfrog rt search --spec $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            # - curl -H 'X-JFrog-Art-Api:$int_{{ .Values.myArtifactory.integrationName }}_apikey' $int_{{ .Values.myArtifactory.integrationName }}_url/api/search/aql -H 'Content-Type: text/plain' -d @files/files-to-cleanup.aql
 
-      - name: list_files_aql
+      - name: delete_old_files
         type: Bash
         configuration:
           inputResources:
@@ -54,21 +49,9 @@ pipelines:
             - name: pre_checks
         execution:
           onExecute:
+            - artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
+            - downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
             - env
-            - ls -la 
-            - find .
-
-      # - name: list_files_filespec
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: {{ .Values.myPipeline.resourcesPrefix }}filespec_01
-      #         trigger: false
-      #     integrations:
-      #       - name: {{ .Values.myArtifactory.integrationName }}
-      #     inputSteps:
-      #       - name: list_files_aql
-      #   execution:
-      #     onExecute:
-      #       - env
-      #       - ls -la 
+            - replace_envs $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - cat $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - jfrog rt delete --spec $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json --dry-run={{ .Values.myPipeline.dryrun }} --quiet
