@@ -10,10 +10,10 @@ resources:
       branches:
         include: {{ .Values.myRepo.branch }}
 
-  - name: {{ .Values.myPipeline.resourcesPrefix }}cron_trigger
-    type: CronTrigger
-    configuration:
-      interval: '0 0 3 * *'     # Every day at 3:00am
+  # - name: {{ .Values.myPipeline.resourcesPrefix }}cron_trigger
+  #   type: CronTrigger
+  #   configuration:
+  #     interval: '0 0 3 * *'     # Every day at 3:00am
 
 pipelines:
   - name: {{ .Values.myPipeline.name }}
@@ -24,8 +24,8 @@ pipelines:
           inputResources:
             - name: {{ .Values.myPipeline.resourcesPrefix }}git_resource
               trigger: false
-            - name: {{ .Values.myPipeline.resourcesPrefix }}cron_trigger
-              trigger: true
+            # - name: {{ .Values.myPipeline.resourcesPrefix }}cron_trigger
+            #   trigger: true
           integrations:
             - name: {{ .Values.myArtifactory.integrationName }}
         execution:
