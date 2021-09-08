@@ -8,7 +8,7 @@ myPipeline:
   resourcesPrefix: acme_cleanup_        # a prefix of your choice, used to identify this pipeline in your server 
   deleteArtifactsOlderThan: 365         # in days, how long ago artifact was created
   deleteWhenLastDownload: 180           # in days, how long ago artifact was last downloaded 
-  dryrun: true                          # enable dryrun option to test pipeline before actualy deleting artifacts 
+  dryrun: true                          # enable dryrun option to test pipeline before actually deleting artifacts 
 
 myArtifactory:
   integrationName: acme_co_artifactory   # the ID or your Artifactory integration entry

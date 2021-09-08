@@ -24,7 +24,7 @@ This is an additional alternative to the existing mechanisms to manage old artif
 
 ### Pipeline setup steps
 
-1. Fork this project
+1. Fork this repository
 
 2. Add [integrations](https://www.jfrog.com/confluence/display/JFROG/Pipelines+Step-By-Step#PipelinesStep-By-Step-AddIntegrations) for both your artifactory server and your git account to connect to the repository created in the previous step.
 
