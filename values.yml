@@ -6,9 +6,9 @@ myRepo:
 myPipeline:
   name: acme_artifactory_cleanup
   resourcesPrefix: acme_cleanup_
-  deleteArtifactsOlderThan: 365         # in days, how long ago artifact was created
-  deleteWhenLastDownload: 180           # in days, how long ago artifact was last downloaded 
-  dryrun: true                          # enable dryrun option to test pipeline before actualy deleting artifacts 
+  deleteArtifactsOlderThan: 10         # in days, how long ago artifact was created
+  deleteWhenLastDownload: 10           # in days, how long ago artifact was last downloaded 
+  dryrun: false                          # enable dryrun option to test pipeline before actualy deleting artifacts 
 
 myArtifactory:
   integrationName: acme_co_artifactory

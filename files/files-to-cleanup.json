@@ -5,6 +5,7 @@
           "items.find": {
             "type":"file",
             "created":{"$lt":"ARTIFACTS_CUTOFF_DATE"},
+            "@deleteme":{"$eq":"true"},
             "$or":
                  [
                      {"stat.downloads" : {"$eq":null}},
