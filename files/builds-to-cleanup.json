@@ -1,0 +1,14 @@
+{
+    "files": [
+      {
+        "aql": {
+          "builds.find": {
+            "name":{"$eq":"go_redis_probe_build"}
+          }
+        },
+        "sortBy": ["created","name"],
+        "sortOrder": "asc"
+      }
+    ]
+}
+

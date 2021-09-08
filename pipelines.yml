@@ -31,12 +31,12 @@ pipelines:
             - echo $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath
             - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y-%m-%d")
             - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y-%m-%d")
+            - add_run_variables ARTIFACTS_CUTOFF_DATE=$artifactsCutOffDate DOWNLOAD_CUTOFF_DATE=$downloadsCutOffDate
             - env
             - sed -i "s/ARTIFACTS_CUTOFF_DATE/$artifactsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - sed -i "s/DOWNLOAD_CUTOFF_DATE/$downloadsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - cat $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - jfrog rt search --spec $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
-            # - curl -H 'X-JFrog-Art-Api:$int_{{ .Values.myArtifactory.integrationName }}_apikey' $int_{{ .Values.myArtifactory.integrationName }}_url/api/search/aql -H 'Content-Type: text/plain' -d @files/files-to-cleanup.aql
 
       - name: delete_old_files
         type: Bash
@@ -50,10 +50,7 @@ pipelines:
             - name: pre_checks
         execution:
           onExecute:
-            - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y-%m-%d")
-            - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y-%m-%d")
-            - env
-            - sed -i "s/ARTIFACTS_CUTOFF_DATE/$artifactsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
-            - sed -i "s/DOWNLOAD_CUTOFF_DATE/$downloadsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - sed -i "s/ARTIFACTS_CUTOFF_DATE/$ARTIFACTS_CUTOFF_DATE/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - sed -i "s/DOWNLOAD_CUTOFF_DATE/$DOWNLOAD_CUTOFF_DATE/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - cat $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - jfrog rt delete --spec $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json --dry-run={{ .Values.myPipeline.dryrun }} --quiet
