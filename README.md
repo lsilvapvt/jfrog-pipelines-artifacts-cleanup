@@ -4,9 +4,13 @@ This is a sample of a JFrog Pipeline that cleans up old artifacts from JFrog Art
 
 <img src="./images/pipeline_screenshot_01.png" alt="JFrog Artifactory Cleanup Pipeline" style="width:400px;background-color:transparent;border:none;" />
 
+---
+
 **Note: This is a sample pipeline implementation. The code available here is not supported or guaranteed to work. Use at your own risk.**
 
-This pipeline provides an example of how to use an AQL ([Artifactory Query Language](https://www.jfrog.com/confluence/display/JFROG/Artifactory+Query+Language)) to search for artifacts that are older than a configurable amount of days and that have not been downloaded for a configurable amount of time, and to delete the artifacts returned in the search results. 
+---
+
+This pipeline provides an example of how to use an AQL ([Artifactory Query Language](https://www.jfrog.com/confluence/display/JFROG/Artifactory+Query+Language)) to search for artifacts that are older than a configurable amount of days and that have not been downloaded for a configurable amount of time, and then delete the artifacts returned in the search results. 
 
 This is an additional alternative to the existing mechanisms to manage old artifacts stored in JFrog Artifactory:
 
