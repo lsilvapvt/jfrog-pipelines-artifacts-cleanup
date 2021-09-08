@@ -29,8 +29,8 @@ pipelines:
         execution:
           onExecute:
             - echo $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath
-            - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
-            - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
+            - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y-%m-%d")
+            - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y-%m-%d")
             - env
             - sed -i "s/ARTIFACTS_CUTOFF_DATE/$artifactsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - sed -i "s/DOWNLOAD_CUTOFF_DATE/$downloadsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
@@ -50,8 +50,8 @@ pipelines:
             - name: pre_checks
         execution:
           onExecute:
-            - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
-            - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
+            - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y-%m-%d")
+            - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y-%m-%d")
             - env
             - sed -i "s/ARTIFACTS_CUTOFF_DATE/$artifactsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - sed -i "s/DOWNLOAD_CUTOFF_DATE/$downloadsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
