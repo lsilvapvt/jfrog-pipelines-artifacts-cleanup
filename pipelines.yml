@@ -41,7 +41,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: {{ .Values.myPipeline.resourcesPrefix }}aql_01
+            - name: {{ .Values.myPipeline.resourcesPrefix }}git_resource
               trigger: false
           integrations:
             - name: {{ .Values.myArtifactory.integrationName }}
