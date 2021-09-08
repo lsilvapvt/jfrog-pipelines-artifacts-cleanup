@@ -1,16 +1,14 @@
 myRepo:
-  gitProvider: acme_co_github
-  path: lsilvapvt/jfrog-pipelines-artifacts-cleanup
-  branch: main 
+  gitProvider: acme_co_github    # the ID of your git integration created in Artifactory
+  path: lsilvapvt/jfrog-pipelines-artifacts-cleanup    # the path of your own git repo (forked from this repo)
+  branch: main      # the branch of your git repo 
 
 myPipeline:
-  name: acme_artifactory_cleanup
-  resourcesPrefix: acme_cleanup_
-  deleteArtifactsOlderThan: 10         # in days, how long ago artifact was created
-  deleteWhenLastDownload: 10           # in days, how long ago artifact was last downloaded 
-  dryrun: false                          # enable dryrun option to test pipeline before actualy deleting artifacts 
+  name: acme_artifactory_cleanup        # the name of your pipeline
+  resourcesPrefix: acme_cleanup_        # a prefix of your choice, used to identify this pipeline in your server 
+  deleteArtifactsOlderThan: 365         # in days, how long ago artifact was created
+  deleteWhenLastDownload: 180           # in days, how long ago artifact was last downloaded 
+  dryrun: true                          # enable dryrun option to test pipeline before actualy deleting artifacts 
 
 myArtifactory:
-  integrationName: acme_co_artifactory
-
-
+  integrationName: acme_co_artifactory   # the ID or your Artifactory integration entry
