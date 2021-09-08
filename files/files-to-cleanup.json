@@ -4,11 +4,11 @@
         "aql": {
           "items.find": {
             "type":"file",
-            "created":{"$lt":"${artifactsCutOffDate}"},
+            "created":{"$lt":"ARTIFACTS_CUTOFF_DATE"},
             "$or":
                  [
                      {"stat.downloads" : {"$eq":null}},
-                     {"stat.downloaded" : {"$lt":"${downloadsCutOffDate}"}}
+                     {"stat.downloaded" : {"$lt":"DOWNLOAD_CUTOFF_DATE"}}
                  ]
           }
         },

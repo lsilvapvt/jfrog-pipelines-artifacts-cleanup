@@ -13,7 +13,7 @@ resources:
   # - name: {{ .Values.myPipeline.resourcesPrefix }}cron_trigger
   #   type: CronTrigger
   #   configuration:
-  #     interval: '*/5 * * * *'     # Every 5 minutes
+  #     interval: '0 0 3 * *'     # Every day at 3:00am
 
 pipelines:
   - name: {{ .Values.myPipeline.name }}
@@ -29,10 +29,11 @@ pipelines:
         execution:
           onExecute:
             - echo $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath
-            - artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
-            - downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
+            - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
+            - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
             - env
-            - replace_envs $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - sed -i "s/ARTIFACTS_CUTOFF_DATE/$artifactsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - sed -i "s/DOWNLOAD_CUTOFF_DATE/$downloadsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - cat $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - jfrog rt search --spec $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             # - curl -H 'X-JFrog-Art-Api:$int_{{ .Values.myArtifactory.integrationName }}_apikey' $int_{{ .Values.myArtifactory.integrationName }}_url/api/search/aql -H 'Content-Type: text/plain' -d @files/files-to-cleanup.aql
@@ -49,9 +50,10 @@ pipelines:
             - name: pre_checks
         execution:
           onExecute:
-            - artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
-            - downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
+            - export artifactsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteArtifactsOlderThan }} days" +"%Y%m%d")
+            - export downloadsCutOffDate=$(date -d "$date -{{ .Values.myPipeline.deleteWhenLastDownload }} days" +"%Y%m%d")
             - env
-            - replace_envs $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - sed -i "s/ARTIFACTS_CUTOFF_DATE/$artifactsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
+            - sed -i "s/DOWNLOAD_CUTOFF_DATE/$downloadsCutOffDate/g" $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - cat $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json
             - jfrog rt delete --spec $res_{{ .Values.myPipeline.resourcesPrefix }}git_resource_resourcePath/files/files-to-cleanup.json --dry-run={{ .Values.myPipeline.dryrun }} --quiet
