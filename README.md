@@ -17,7 +17,8 @@ This is an additional alternative to the existing mechanisms to manage old artif
   - https://jfrog.com/knowledge-base/artifactory-cleanup-best-practices/ 
   - https://jfrog.com/blog/advanced-cleanup-using-artifactory-query-language-aql
   - https://github.com/jfrog/jfrog-cli-plugins/tree/main/rt-cleanup
-  - https://github.com/jfrog/artifactory-user-plugins/tree/master/cleanup/cleanDockerImages
+  - https://github.com/jfrog/artifactory-user-plugins/tree/master/cleanup
+  - https://jfrog.com/knowledge-base/artifactory-cleanup-methods-how-do-i-delete-old-artifacts/
 
 
 ---
